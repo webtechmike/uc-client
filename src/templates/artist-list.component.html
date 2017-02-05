@@ -1,0 +1,9 @@
+<div>
+    <label for="artists">Browse By Artist</label><br>
+    <select id="artists">
+        <option value="" selected="selected">--select artist--</option>
+        <option ng-repeat="artist in model.artists | orderBy" value="{{ artist._id }}">
+            {{ artist._id }}
+        </option>
+    </select>
+</div>

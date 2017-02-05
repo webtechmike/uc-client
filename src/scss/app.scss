@@ -1,0 +1,17 @@
+$bgDark: #1f1f1f;
+
+html,
+body {
+    background: $bgDark;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+img {
+    max-width: 100%;
+}
+
+.navbar-brand {
+    height: auto;
+}

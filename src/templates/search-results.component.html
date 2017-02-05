@@ -1,0 +1,32 @@
+<section class="panel panel-default">
+    <div class="panel-heading">
+
+    </div>
+    <div class="panel-body">
+        <div ng-if="undefined == model.results.length || model.results.length == 0">
+            Please try searching...
+        </div>
+        <div ng-if="model.results.length > 0" class="list-group">
+            <h3 class="text-center" ng-if="model.selected._id">
+                {{ model.artist._id }}
+            </h3>
+            <dl>
+                <dt>
+                    Total Songs:
+                </dt>
+                <dd>
+                    {{ model.artist.songs }}
+                </dd>
+            </dl>
+
+            <a href="#" class="list-group-item" ng-repeat="track in model.results | orderBy: $index">
+                <strong>{{track.track_name}}</strong> by <em>{{track.album_artist}}</em>
+                <span class="pull-right glyphicon glyphicon-chevron-right"></span>
+            </a>
+            <!-- <a href="#" class="list-group-item" ng-repeat="track in model.results | orderBy:'track_name'">
+                <strong>{{track.track_name}}</strong> by <em>{{track.album_artist}}</em>
+                <span class="pull-right glyphicon glyphicon-chevron-right"></span>
+            </a> -->
+        </div>
+    </div>
+</section>
