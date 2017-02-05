@@ -1,6 +1,5 @@
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
-    chmod = require('gulp-chmod'),
     clean = require('gulp-clean'),
     jshint = require('gulp-jshint'),
     uglify = require('gulp-uglify'),
@@ -16,6 +15,11 @@ var gulp = require('gulp'),
 
 var paths = {
     build: "./build/**/*",
+    jQuery: "./bower_components/jquery/dist/jquery.js",
+    bootstrapCss: "./bower_components/bootstrap/dist/css/bootstrap.css",
+    bootstrapJs: "./bower_components/bootstrap/dist/js/bootstrap.js",
+    glyphicons: "./bower_components/bootstrap/dist/fonts/*",
+    angular: "./bower_components/angular/angular.js",
     vendorStyles: "./src/vendor/css/**/*.css",
     vendorScripts: "./src/vendor/js/**/*.js",
     fonts: "./src/vendor/fonts/*",
@@ -34,7 +38,40 @@ gulp.task('clean', function(){
         .pipe(clean({force: true}));
 });
 
-gulp.task('vendorStyles', function(){
+gulp.task('jQuery', function(){
+    return gulp.src(paths.jQuery)
+        .pipe(concat('jquery.min.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('./src/vendor/js/'));
+});
+
+gulp.task('bootstrapCss', function(){
+    return gulp.src(paths.bootstrapCss)
+        .pipe(sourcemaps.init())
+        .pipe(concat('bootstrap.min.css'))
+        .pipe(cssnano())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('./src/vendor/css/'));
+});
+
+gulp.task('bootstrapJs', function(){
+    return gulp.src(paths.bootstrapJs)
+        .pipe(concat('bootstrap.min.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('./src/vendor/js/'));
+});
+
+gulp.task('glyphicons', function(){
+    return gulp.src(paths.glyphicons)
+        .pipe(gulp.dest('./src/vendor/fonts/'));
+});
+
+gulp.task('angular', function(){
+    return gulp.src(paths.angular)
+        .pipe(gulp.dest('./src/vendor/js/'));
+});
+
+gulp.task('vendorStyles', ['bootstrapCss', 'glyphicons'], function(){
     return gulp.src(paths.vendorStyles)
         .pipe(sourcemaps.init())
         .pipe(concat('vendor.min.css'))
@@ -42,7 +79,7 @@ gulp.task('vendorStyles', function(){
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('./build/vendor/css/'));
 });
-gulp.task('vendorScripts', function(){
+gulp.task('vendorScripts', ['jQuery', 'bootstrapJs', 'angular'], function(){
     return gulp.src(paths.vendorScripts)
         .pipe(order([
             'jquery.min.js',
@@ -57,7 +94,7 @@ gulp.task('fonts', function(){
     return gulp.src(paths.fonts)
         .pipe(gulp.dest('./build/vendor/fonts/'));
 });
-gulp.task('vendor', ['vendorStyles', 'vendorScripts'], function(){
+gulp.task('vendor', ['fonts', 'vendorStyles', 'vendorScripts'], function(){
     console.log('Compiling dependencies...');
 });
 
@@ -73,23 +110,6 @@ gulp.task('templates', function(){
     };
     return gulp.src(paths.templates)
         .pipe(templateCache('templates.js', options))
-        // .pipe(chmod({
-        //     owner: {
-        //         read: true,
-        //         write: true,
-        //         execute: true
-        //     },
-        //     group: {
-        //         read: true,
-        //         write: true,
-        //         execute: true
-        //     },
-        //     others: {
-        //         read: true,
-        //         write: true,
-        //         execute: true
-        //     }
-        // }))
         .pipe(gulp.dest('./src/js/'));
 });
 
@@ -129,7 +149,7 @@ gulp.task('watch', function () {
     gulp.watch('src/scss/**/*.scss', ['build-css']);
 });
 
-gulp.task('build', ['clean', 'vendor', 'images', 'css', 'js'], function(){
+gulp.task('build', ['vendor', 'images', 'css', 'js'], function(){
     return gulp.src('./src/index.html')
         .pipe(gulp.dest('./build/'));
 });
