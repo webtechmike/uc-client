@@ -11,7 +11,7 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     imagemin = require('gulp-imagemin'),
     templateCache = require('gulp-angular-templatecache'),
-    livereload = require('gulp-livereload');
+    browserSync = require('browser-sync').create();
 
 var paths = {
     build: "./build/**/*",
@@ -143,10 +143,40 @@ gulp.task('js', ['jshint'], function () {
         .pipe(gulp.dest('./build/'));
 });
 
-gulp.task('watch', function () {
-    livereload.listen();
-    gulp.watch('src/js/**/*.js', ['jshint']);
-    gulp.watch('src/scss/**/*.scss', ['build-css']);
+gulp.task('dev-css', function(){
+    return gulp.src('./src/scss/**/*.scss')
+        .pipe(sourcemaps.init())
+        .pipe(autoprefixer({
+            browsers: ['last 2 versions']
+        }))
+        .pipe(sass())
+        .pipe(concat('css/app.css'))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('./dev/'));
+});
+
+gulp.task('dev-js', ['jshint', 'templates'], function () {
+    return gulp.src('src/js/**/*.js')
+        .pipe(sourcemaps.init())
+        .pipe(concat('dev.min.js'))
+        .pipe(gutil.env.type === 'production' ? uglify() : gutil.noop())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('./dev/'));
+});
+
+gulp.task('watch', function (done) {
+    gulp.watch('src/scss/**/*.scss', ['dev-css']);
+    gulp.watch('src/js/**/*.js', ['jshint', 'dev-js']);
+    browserSync.reload();
+    done();
+});
+
+gulp.task('serve', ['watch'], function(){
+    browserSync.init({
+        proxy: "uc.local"
+    });
+
+    gulp.watch('./src', ['watch']);
 });
 
 gulp.task('build', ['vendor', 'images', 'css', 'js'], function(){

@@ -16,12 +16,14 @@
             API.textSearch(searchTerm)
                 .then(function(response){
                     model.results = response.data;
+                }, function(err){
+                    console.log(err);
                 });
         };
 
-        model.search = function(artist){
+        model.onSearch = function(artist){
             console.log('ARTEEST:', artist);
-            model.onSearch({'artist': artist});
+            model.search({'artist': artist});
         };
 
         model.$onInit = function(){
@@ -29,6 +31,7 @@
                 .then(function(response){
                     console.log('res', response.data);
                     model.artists = response.data;
+                    model.results = response.data;
                 });
         };
     }

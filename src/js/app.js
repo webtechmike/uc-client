@@ -4,7 +4,7 @@
     var app = angular.module('UC', []);
 
     app.factory('API', ['$q', '$http', function($q, $http){
-        var url = 'http://localhost:3000/';
+        var url = 'http://localhost:3030/';
         var deferred = $q.defer();
 
         return {
@@ -17,7 +17,7 @@
                 $http.get(url+'searchTerm').then(function(response){
                     deferred.resolve(response.data);
                 }, function(err){
-                    deferred.reject("Not happening...");
+                    deferred.reject("Not happening... " + err);
                 });
                 return deferred.promise;
             }

@@ -5,17 +5,17 @@
     function controller(API, $scope, $http){
         var model = this;
 
-        // $scope.$watch('results', function(search){
-        //     if(undefined == search || search == '') {
-        //         model.results = model.artist ? model.artist : 'love';
-        //     } else if(search.length > 0) {
-        //         model.results = API.textSearch(search).then(function(response){
-        //             model.results = response.data.data;
-        //         });
-        //     } else {
-        //         model.results = model.search;
-        //     }
-        // });
+        $scope.$watch('results', function(search){
+            if(undefined === search || search === '') {
+                model.results = model.artist ? model.artist : 'love';
+            } else if(search.length > 0) {
+                model.results = API.textSearch(search).then(function(response){
+                    model.results = response.data.data;
+                });
+            } else {
+                model.results = model.search;
+            }
+        });
     }
 
     app.component('searchResults', {
