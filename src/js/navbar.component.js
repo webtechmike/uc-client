@@ -4,6 +4,15 @@
 
     function controller($http){
         var model = this;
+
+        model.form = {
+            search: 'love'
+        };
+
+        model.onSearch = function(search){
+            console.log('SEARCHING...', search);
+            model.search({'search': search});
+        };
     }
 
     app.component('navbar', {

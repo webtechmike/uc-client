@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="row">
-        <navbar></navbar>
+        <navbar on-search="model.textSearch(search)"></navbar>
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-sm-4">
@@ -9,7 +9,7 @@
                             <h2>Search filters</h2>
                         </div>
                         <div class="panel-body">
-                            <artist-list artists="model.artists" on-search="model.textSearch(search)"></artist-list>
+                            <artist-list artists="model.artists"></artist-list>
                         </div>
                     </section>
                 </div>

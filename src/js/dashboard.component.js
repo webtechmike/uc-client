@@ -21,11 +21,6 @@
                 });
         };
 
-        model.onSearch = function(artist){
-            console.log('ARTEEST:', artist);
-            model.search({'artist': artist});
-        };
-
         model.$onInit = function(){
             API.fetchArtists($http)
                 .then(function(response){
